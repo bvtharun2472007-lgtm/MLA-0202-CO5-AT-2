@@ -1,0 +1,27 @@
+import random
+
+# Input number of simulations
+N = int(input("Enter number of simulations: "))
+
+on_time_count = 0
+
+for i in range(N):
+
+    # Generate random delivery conditions
+    traffic = random.randint(0, 100)
+    weather = random.randint(0, 100)
+    delay = random.randint(0, 100)
+
+    # Simulate delivery
+    if traffic < 70 and weather < 80 and delay < 50:
+        on_time_count += 1
+
+# Estimate probability
+probability = on_time_count / N
+
+print("\nMonte Carlo Simulation Results")
+print("--------------------------------")
+print("Total Simulations      :", N)
+print("On-Time Deliveries     :", on_time_count)
+print("Estimated Probability  :", round(probability, 4))
+print("Estimated Percentage   :", round(probability * 100, 2), "%")
