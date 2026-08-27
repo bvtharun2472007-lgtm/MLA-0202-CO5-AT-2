@@ -1,0 +1,74 @@
+import random
+import matplotlib.pyplot as plt
+
+# Number of game states
+num_states = 6
+
+# Number of episodes
+episodes = 100
+
+# Learning rate
+alpha = 0.1
+
+# Discount factor
+gamma = 0.9
+
+# Initialize state-value estimates
+V = [0.0] * num_states
+
+# Store average value for graph
+value_history = []
+
+# TD Learning
+for episode in range(episodes):
+
+    # Start from a random state
+    state = random.randint(0, num_states - 2)
+
+    while state < num_states - 1:
+
+        # Generate reward for the move
+        reward = random.randint(1, 10)
+
+        # Move to next state
+        next_state = state + 1
+
+        # TD Learning Rule:
+        # V(s) = V(s) + alpha * [R + gamma*V(s') - V(s)]
+
+        td_target = reward + gamma * V[next_state]
+
+        td_error = td_target - V[state]
+
+        V[state] = V[state] + alpha * td_error
+
+        state = next_state
+
+    # Store average state value
+    value_history.append(sum(V) / num_states)
+
+
+# Display final state values
+print("Final State-Value Estimates")
+print("--------------------------------")
+
+for i in range(num_states):
+    print("State", i + 1, ":", round(V[i], 2))
+
+
+# Plot learning graph
+plt.figure(figsize=(8, 5))
+
+plt.plot(
+    range(1, episodes + 1),
+    value_history,
+    marker='o',
+    markersize=3
+)
+
+plt.xlabel("Episode")
+plt.ylabel("Average State Value")
+plt.title("TD Learning - Game Score Prediction")
+plt.grid(True)
+
+plt.show()
