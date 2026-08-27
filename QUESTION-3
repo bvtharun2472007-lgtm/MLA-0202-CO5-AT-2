@@ -1,0 +1,133 @@
+grid = [
+    [0,  0,  0,  0],
+    [0, -1,  0,  0],
+    [0,  0,  0,  0],
+    [0,  0,  0,  9]
+]
+
+rows = len(grid)
+cols = len(grid[0])
+
+gamma = 0.9
+theta = 0.001
+actions = {
+    "U": (-1, 0),
+    "D": (1, 0),
+    "L": (0, -1),
+    "R": (0, 1)
+}
+V = [[0.0 for _ in range(cols)] for _ in range(rows)]
+while True:
+
+    delta = 0
+
+    new_V = [row[:] for row in V]
+
+    for r in range(rows):
+        for c in range(cols):
+            if grid[r][c] == -1:
+                new_V[r][c] = float("-inf")
+                continue
+            if grid[r][c] == 9:
+                new_V[r][c] = 0
+                continue
+            best_value = float("-inf")
+            for action, (dr, dc) in actions.items():
+
+                nr = r + dr
+                nc = c + dc
+
+                # Invalid movement
+                if (nr < 0 or nr >= rows or
+                    nc < 0 or nc >= cols or
+                    grid[nr][nc] == -1):
+
+                    value = -10
+
+                else:
+
+                    # Normal movement has reward -1
+                    value = -1 + gamma * V[nr][nc]
+
+                    # Reaching goal gives reward 100
+                    if grid[nr][nc] == 9:
+                        value = 100
+
+                best_value = max(best_value, value)
+
+            new_V[r][c] = best_value
+
+            delta = max(delta, abs(new_V[r][c] - V[r][c]))
+
+    V = new_V
+
+    # Check convergence
+    if delta < theta:
+        break
+
+# Generate optimal policy
+policy = [["-" for _ in range(cols)] for _ in range(rows)]
+
+for r in range(rows):
+    for c in range(cols):
+
+        if grid[r][c] == -1:
+            policy[r][c] = "X"
+
+        elif grid[r][c] == 9:
+            policy[r][c] = "G"
+
+        else:
+
+            best_value = float("-inf")
+            best_action = "-"
+
+            for action, (dr, dc) in actions.items():
+
+                nr = r + dr
+                nc = c + dc
+
+                if (nr < 0 or nr >= rows or
+                    nc < 0 or nc >= cols or
+                    grid[nr][nc] == -1):
+                    continue
+
+                value = -1 + gamma * V[nr][nc]
+
+                if grid[nr][nc] == 9:
+                    value = 100
+
+                if value > best_value:
+                    best_value = value
+                    best_action = action
+
+            policy[r][c] = best_action
+
+# Display Value Function
+print("\nOptimal Value Function")
+print("--------------------------------")
+
+for row in V:
+    for value in row:
+        if value == float("-inf"):
+            print(" X\t", end="")
+        else:
+            print(f"{value:.2f}\t", end="")
+    print()
+
+# Display Policy
+print("\nOptimal Policy")
+print("--------------------------------")
+
+for row in policy:
+    for action in row:
+        print(action, end="\t")
+    print()
+
+print("\nLegend:")
+print("U = Up")
+print("D = Down")
+print("L = Left")
+print("R = Right")
+print("X = Obstacle")
+print("G = Goal")
