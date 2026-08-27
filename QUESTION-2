@@ -1,0 +1,45 @@
+import random
+K = int(input("Enter number of movies: "))
+epsilon = float(input("Enter exploration rate (epsilon): "))
+N = int(input("Enter number of user interactions: "))
+reward_estimate = [0.0] * K
+count = [0] * K
+
+for i in range(N):
+
+    
+    random_value = random.random()
+
+  
+    if random_value < epsilon:
+        movie = random.randint(0, K - 1)
+
+  
+    else:
+        movie = reward_estimate.index(max(reward_estimate))
+
+    
+    reward = random.random()
+
+    
+    count[movie] += 1
+    reward_estimate[movie] = (
+        reward_estimate[movie]
+        + (reward - reward_estimate[movie]) / count[movie]
+    )
+best_movie = reward_estimate.index(max(reward_estimate))
+
+print("\nFinal Results")
+print("--------------------------------")
+
+for i in range(K):
+    print(
+        "Movie", i + 1,
+        ": Watched =", count[i],
+        ", Expected Reward =",
+        round(reward_estimate[i], 4)
+    )
+
+print("\nBest Movie Recommendation : Movie", best_movie + 1)
+print("Highest Expected Reward    :",
+      round(reward_estimate[best_movie], 4))
