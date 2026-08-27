@@ -1,33 +1,23 @@
 import random
 import matplotlib.pyplot as plt
-
-# Number of simulations
 N = 10000
 
 on_time_count = 0
 simulation_points = []
 probability_points = []
-
-# Monte Carlo Simulation
 for i in range(1, N + 1):
 
-    # Generate random delivery conditions
     traffic = random.randint(0, 100)
     weather = random.randint(0, 100)
     delay = random.randint(0, 100)
-
-    # Check whether delivery is on time
     if traffic < 70 and weather < 80 and delay < 50:
         on_time_count += 1
-
-    # Store values every 100 simulations
     if i % 100 == 0:
         probability = on_time_count / i
 
         simulation_points.append(i)
         probability_points.append(probability)
 
-# Final probability
 final_probability = on_time_count / N
 
 print("Monte Carlo Simulation Results")
@@ -37,7 +27,6 @@ print("On-Time Deliveries    :", on_time_count)
 print("Estimated Probability :", round(final_probability, 4))
 print("Estimated Percentage  :", round(final_probability * 100, 2), "%")
 
-# Plot graph
 plt.figure(figsize=(8, 5))
 
 plt.plot(
