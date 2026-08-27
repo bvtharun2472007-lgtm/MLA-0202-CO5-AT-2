@@ -1,44 +1,27 @@
 import random
-import matplotlib.pyplot as plt
-N = 10000
+
+# Input number of simulations
+N = int(input("Enter number of simulations: "))
 
 on_time_count = 0
-simulation_points = []
-probability_points = []
-for i in range(1, N + 1):
 
+for i in range(N):
+
+    # Generate random delivery conditions
     traffic = random.randint(0, 100)
     weather = random.randint(0, 100)
     delay = random.randint(0, 100)
+
+    # Simulate delivery
     if traffic < 70 and weather < 80 and delay < 50:
         on_time_count += 1
-    if i % 100 == 0:
-        probability = on_time_count / i
 
-        simulation_points.append(i)
-        probability_points.append(probability)
+# Estimate probability
+probability = on_time_count / N
 
-final_probability = on_time_count / N
-
-print("Monte Carlo Simulation Results")
+print("\nMonte Carlo Simulation Results")
 print("--------------------------------")
-print("Total Simulations     :", N)
-print("On-Time Deliveries    :", on_time_count)
-print("Estimated Probability :", round(final_probability, 4))
-print("Estimated Percentage  :", round(final_probability * 100, 2), "%")
-
-plt.figure(figsize=(8, 5))
-
-plt.plot(
-    simulation_points,
-    probability_points,
-    marker='o',
-    markersize=2
-)
-
-plt.xlabel("Number of Simulations")
-plt.ylabel("Estimated Probability")
-plt.title("Monte Carlo Sampling - Probability Estimation")
-
-plt.grid(True)
-plt.show()
+print("Total Simulations      :", N)
+print("On-Time Deliveries     :", on_time_count)
+print("Estimated Probability  :", round(probability, 4))
+print("Estimated Percentage   :", round(probability * 100, 2), "%")
